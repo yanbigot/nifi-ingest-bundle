@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.socgen.nifi.processors
+package com.socgen.nifi.processors.training
 
 import java.io._
 import java.util.concurrent.atomic.AtomicReference
@@ -23,15 +23,12 @@ import java.util.concurrent.atomic.AtomicReference
 import org.apache.commons.io.IOUtils
 
 // NiFi
-import org.apache.nifi.flowfile.FlowFile
+import org.apache.nifi.annotation.behavior.{ReadsAttribute, ReadsAttributes, WritesAttribute, WritesAttributes}
+import org.apache.nifi.annotation.documentation.{CapabilityDescription, SeeAlso, Tags}
+import org.apache.nifi.annotation.lifecycle.OnScheduled
 import org.apache.nifi.components.PropertyDescriptor
 import org.apache.nifi.processor.io.InputStreamCallback
-import org.apache.nifi.processor.{ AbstractProcessor, Relationship }
-import org.apache.nifi.processor.{ ProcessorInitializationContext, ProcessContext, ProcessSession }
-import org.apache.nifi.annotation.behavior.{ ReadsAttribute, ReadsAttributes }
-import org.apache.nifi.annotation.behavior.{ WritesAttribute, WritesAttributes }
-import org.apache.nifi.annotation.documentation.{ CapabilityDescription, SeeAlso, Tags }
-import org.apache.nifi.annotation.lifecycle.OnScheduled
+import org.apache.nifi.processor._
 
 // Typesafe Config
 import com.typesafe.config.ConfigFactory
