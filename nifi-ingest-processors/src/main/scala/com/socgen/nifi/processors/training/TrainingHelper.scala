@@ -1,7 +1,7 @@
 package com.socgen.nifi.processors.training
 
 import java.text.SimpleDateFormat
-import java.util.{Calendar, TimeZone}
+import java.util.{ Calendar, TimeZone }
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -13,24 +13,24 @@ import scala.io.Source
 object TrainingHelper {
 
   case class TrainingConf(apiId: String, apiSecret: String, userName: String)
-
-  def getConf(): TrainingConf ={
+  implicit val formats = net.liftweb.json.DefaultFormats
+  def getConf(): TrainingConf = {
     val json = Source.fromURL(getClass.getResource("training/data.xml"))
     net.liftweb.json.parse(json.mkString).extract[TrainingConf]
   }
 
-  def buildAuthStringToSign(httpMethod: String = "GET", apiKey: String, date: String, httpUrl: String = "/services/api/sts/session"): String ={
+  def buildAuthStringToSign(httpMethod: String = "GET", apiId: String, date: String, httpUrl: String = "/services/api/sts/session"): String = {
     httpMethod + "\n" +
-    "x-csod-api-key:"+ apiKey + "\n" +
-    "x-csod-date:"+ date +"\n" +
-    httpUrl
+      "x-csod-api-key:" + apiId + "\n" +
+      "x-csod-date:" + date + "\n" +
+      httpUrl
   }
 
-  def buildDataStringToSign(httpMethod: String = "POST", date: String, token: String,  httpUrl: String): String ={
+  def buildDataStringToSign(httpMethod: String = "POST", date: String, token: String, httpUrl: String): String = {
     httpMethod + "\n" +
-    "x-csod-date:"+ date + "\n" +
-    "x-csod-session-token:" + token + "\n" +
-    httpUrl
+      "x-csod-date:" + date + "\n" +
+      "x-csod-session-token:" + token + "\n" +
+      httpUrl
   }
 
   def generateSignature(key: String, message: String, date: String, algo: String = "HmacSHA512"): String = {
@@ -50,7 +50,7 @@ object TrainingHelper {
     encoded
   }
 
-  def getDate(): String ={
+  def getDate(): String = {
 
     val today = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime()
     val yearMonthDay = new SimpleDateFormat("YYYY-MM-dd")
@@ -62,6 +62,6 @@ object TrainingHelper {
     val currentYearMonthDay = yearMonthDay.format(today)
     val currentMinutes = minutes.format(today)
 
-    new String(currentYearMonthDay + "T" + currentHourMinus1 +":"+ currentMinutes +":"+ currentSecondesMinus4 +".000")
+    new String(currentYearMonthDay + "T" + currentHourMinus1 + ":" + currentMinutes + ":" + currentSecondesMinus4 + ".000")
   }
 }
