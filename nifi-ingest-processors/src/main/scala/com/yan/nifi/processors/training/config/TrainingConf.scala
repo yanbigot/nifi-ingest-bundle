@@ -1,6 +1,6 @@
-package com.yan.training.config
+package com.yan.nifi.processors.training.config
 
-import com.yan.training.model.Model.TrainingCredentials
+import com.yan.nifi.processors.training.model.Model.TrainingCredentials
 
 import scala.io.Source
 

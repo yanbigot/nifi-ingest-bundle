@@ -17,7 +17,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.socgen</groupId>
+        <groupId>com.yan</groupId>
         <artifactId>nifi-ingest-bundle</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>

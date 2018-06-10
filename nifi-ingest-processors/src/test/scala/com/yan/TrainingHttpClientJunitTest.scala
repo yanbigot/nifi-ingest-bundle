@@ -1,6 +1,6 @@
 package com.yan
 
-import com.yan.training.httpclient.TrainingHttpClient
+import com.yan.nifi.processors.training.httpclient.TrainingHttpClient
 import org.junit.Test
 
 class TrainingHttpClientJunitTest {

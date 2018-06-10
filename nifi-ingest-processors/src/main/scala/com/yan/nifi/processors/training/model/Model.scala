@@ -1,4 +1,4 @@
-package com.yan.training.model
+package com.yan.nifi.processors.training.model
 
 object Model {
 

@@ -14,24 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yan.training
+package com.yan.nifi.processors.training
 
 // NiFi
-import org.apache.nifi.components.PropertyDescriptor
-import org.apache.nifi.processor.util.StandardValidators
+import org.apache.nifi.processor.Relationship
 
-trait TrainingProcessorProperties {
-  val ExampleProperty =
-    new PropertyDescriptor.Builder()
-      .name("Example Property")
-      .description("Whatever the property does")
-      .required(true)
-      .expressionLanguageSupported(true)
-      .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+trait TrainingProcessorRelationships {
+  val RelSuccess =
+    new Relationship.Builder()
+      .name("success")
+      .description("""
+        Any FlowFile that is successfully transferred is routed to this relationship
+      """.trim)
       .build
 
-  lazy val properties = List(ExampleProperty)
+  val RelFailure =
+    new Relationship.Builder()
+      .name("failure")
+      .description("""
+          Any FlowFile that fails to be transferred is routed to this relationship
+      """.trim)
+      .build
+
+  lazy val relationships = Set(RelSuccess, RelFailure)
 }
 
-object TrainingProcessorProperties extends TrainingProcessorProperties {
+object TrainingProcessorRelationships extends TrainingProcessorRelationships {
 }

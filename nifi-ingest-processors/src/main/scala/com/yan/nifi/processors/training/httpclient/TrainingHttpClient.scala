@@ -1,7 +1,7 @@
-package com.yan.training.httpclient
+package com.yan.nifi.processors.training.httpclient
 
-import com.yan.training.config.TrainingConf._
-import com.yan.training.security.TrainingHelper._
+import com.yan.nifi.processors.training.config.TrainingConf._
+import com.yan.nifi.processors.training.security.TrainingHelper._
 import org.apache.http.client.methods.{HttpGet, HttpPost}
 import org.apache.http.impl.client.HttpClientBuilder
 

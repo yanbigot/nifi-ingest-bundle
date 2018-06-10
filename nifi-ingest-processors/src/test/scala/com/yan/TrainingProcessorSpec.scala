@@ -18,8 +18,8 @@ package com.socgen.nifi.processors
 
 import java.io._
 
+import com.yan.nifi.processors.training.TrainingProcessor
 
-import com.yan.training.TrainingProcessor
 
 // ScalaTest
 import org.scalatest._
@@ -28,8 +28,8 @@ import org.scalatest._
 import org.apache.nifi.util.TestRunners
 
 class TrainingProcessorSpec extends FunSpec {
-  import com.yan.training.TrainingProcessorProperties.ExampleProperty
-  import com.yan.training.TrainingProcessorRelationships.{RelFailure, RelSuccess}
+  import com.yan.nifi.processors.training.TrainingProcessorProperties.ExampleProperty
+  import com.yan.nifi.processors.training.TrainingProcessorRelationships.{RelFailure, RelSuccess}
 
   import scala.collection.JavaConverters._
 

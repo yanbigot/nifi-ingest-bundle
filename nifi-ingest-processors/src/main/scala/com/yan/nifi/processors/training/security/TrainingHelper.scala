@@ -1,8 +1,8 @@
-package com.yan.training.security
+package com.yan.nifi.processors.training.security
 
 import java.text.SimpleDateFormat
 import java.util.{Calendar, TimeZone}
-import com.yan.training.config.TrainingConf._
+import com.yan.nifi.processors.training.config.TrainingConf._
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import javax.xml.bind.DatatypeConverter

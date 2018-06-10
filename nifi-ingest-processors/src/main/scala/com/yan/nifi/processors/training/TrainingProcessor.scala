@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yan.training
+package com.yan.nifi.processors.training
 
 import java.io._
 import java.util.concurrent.atomic.AtomicReference

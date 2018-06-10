@@ -1,7 +1,8 @@
-package com.yan.training.logic
+package com.yan.nifi.processors.training.logic
 
-import com.yan.training.httpclient.TrainingHttpClient.{MAP_ALIAS, MAP_SECRET, MAP_TOKEN}
-import com.yan.training.model.Model.PageResult
+import com.yan.nifi.processors.training.httpclient.TrainingHttpClient.{MAP_ALIAS, MAP_SECRET, MAP_TOKEN}
+import com.yan.nifi.processors.training.model.Model.PageResult
+
 import scala.language.postfixOps
 import scala.xml.XML
 
