@@ -1,32 +1,24 @@
-package com.socgen.nifi.processors.training
+package com.yan.training.security
 
 import java.text.SimpleDateFormat
-import java.util.{ Calendar, TimeZone }
-
+import java.util.{Calendar, TimeZone}
+import com.yan.training.config.TrainingConf._
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import javax.xml.bind.DatatypeConverter
 import org.apache.commons.codec.binary.Base64
 
-import scala.io.Source
-
 object TrainingHelper {
+  val apiConf = getConf
 
-  case class TrainingConf(apiId: String, apiSecret: String, userName: String)
-  implicit val formats = net.liftweb.json.DefaultFormats
-  def getConf(): TrainingConf = {
-    val json = Source.fromURL(getClass.getResource("training/data.xml"))
-    net.liftweb.json.parse(json.mkString).extract[TrainingConf]
-  }
-
-  def buildAuthStringToSign(httpMethod: String = "GET", apiId: String, date: String, httpUrl: String = "/services/api/sts/session"): String = {
-    httpMethod + "\n" +
-      "x-csod-api-key:" + apiId + "\n" +
+  def buildAuthStringToSign(date: String): String = {
+    "GET" + "\n" +
+      "x-csod-api-key:" + apiConf.apiId + "\n" +
       "x-csod-date:" + date + "\n" +
-      httpUrl
+      apiConf.authenticateEndpoint
   }
 
-  def buildDataStringToSign(httpMethod: String = "POST", date: String, token: String, httpUrl: String): String = {
+  def buildEndPointCallStringToSign( httpMethod: String = "POST", date: String, token: String, httpUrl: String): String = {
     httpMethod + "\n" +
       "x-csod-date:" + date + "\n" +
       "x-csod-session-token:" + token + "\n" +
@@ -51,7 +43,6 @@ object TrainingHelper {
   }
 
   def getDate(): String = {
-
     val today = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime()
     val yearMonthDay = new SimpleDateFormat("YYYY-MM-dd")
     val hour = new SimpleDateFormat("HH")

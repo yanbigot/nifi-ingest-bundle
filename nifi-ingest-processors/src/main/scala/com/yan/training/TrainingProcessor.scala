@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.socgen.nifi.processors.training
+package com.yan.training
 
 import java.io._
 import java.util.concurrent.atomic.AtomicReference
+
+import org.apache.nifi.processor.io.InputStreamCallback
 
 // Commons IO
 import org.apache.commons.io.IOUtils
@@ -27,7 +29,6 @@ import org.apache.nifi.annotation.behavior.{ReadsAttribute, ReadsAttributes, Wri
 import org.apache.nifi.annotation.documentation.{CapabilityDescription, SeeAlso, Tags}
 import org.apache.nifi.annotation.lifecycle.OnScheduled
 import org.apache.nifi.components.PropertyDescriptor
-import org.apache.nifi.processor.io.InputStreamCallback
 import org.apache.nifi.processor._
 
 // Typesafe Config
@@ -76,7 +77,7 @@ class TrainingProcessor extends AbstractProcessor with TrainingProcessorProperti
 
         val content = new AtomicReference[String]
         session.read(flowFile, new InputStreamCallback {
-          override def process(in: InputStream): Unit = {
+          override def process( in: InputStream ): Unit = {
             try {
               val s = IOUtils.toString(in)
               content.set(s)
@@ -86,7 +87,7 @@ class TrainingProcessor extends AbstractProcessor with TrainingProcessorProperti
                 session.transfer(flowFile, RelFailure)
             }
           }
-        })
+        } )
       }
       case _ =>
         getLogger().warn("FlowFile was null")

@@ -18,16 +18,20 @@ package com.socgen.nifi.processors
 
 import java.io._
 
+
+import com.yan.training.TrainingProcessor
+
 // ScalaTest
 import org.scalatest._
 
 // NiFi
-import org.apache.nifi.util.{ TestRunner, TestRunners }
+import org.apache.nifi.util.TestRunners
 
 class TrainingProcessorSpec extends FunSpec {
+  import com.yan.training.TrainingProcessorProperties.ExampleProperty
+  import com.yan.training.TrainingProcessorRelationships.{RelFailure, RelSuccess}
+
   import scala.collection.JavaConverters._
-  import TrainingProcessorProperties.ExampleProperty
-  import TrainingProcessorRelationships.{ RelSuccess, RelFailure }
 
   val SomeContent = "some content"
 
