@@ -2,7 +2,7 @@ package com.yan.nifi.processors.training.httpclient
 
 import com.yan.nifi.processors.training.config.TrainingConf._
 import com.yan.nifi.processors.training.security.TrainingHelper._
-import org.apache.http.client.methods.{HttpGet, HttpPost}
+import org.apache.http.client.methods.{ CloseableHttpResponse, HttpGet, HttpPost }
 import org.apache.http.impl.client.HttpClientBuilder
 
 import scala.io.Source
@@ -38,7 +38,8 @@ object TrainingHttpClient {
     val date = getDate
     val stringToSign = buildAuthStringToSign(date = date)
     val signature = generateSignature(apiConf.apiSecret, stringToSign, date)
-    val post: HttpPost = new HttpPost(buildAuthenticateUrl(date))
+    val url = this.buildAuthenticateUrl(date)
+    val post: HttpPost = new HttpPost(url)
     post.addHeader(X_CSOD_DATE, date)
     post.addHeader(X_CSOD_SIGNATURE, signature)
     post.addHeader(X_CSOD_API_KEY, apiConf.apiId)
@@ -60,7 +61,7 @@ object TrainingHttpClient {
     }
     parseAutenticationResponse(content)
   }
-  private def buildAuthenticateUrl(date: String): String ={
+  private def buildAuthenticateUrl(date: String): String = {
     apiConf.url + apiConf.authenticateEndpoint + "?userName=" + apiConf.userName + "&alias=" + date
   }
 
@@ -78,24 +79,40 @@ object TrainingHttpClient {
       MAP_ALIAS -> alias)
   }
 
+  def call(view: String, token: String, alias: String, secret: String, filter: String): CloseableHttpResponse = {
+    val date = getDate
+    val stringToSign = buildEndPointCallStringToSign(date = date, token = token, httpUrl = view)
+    val signature = generateSignature(secret, stringToSign, date)
+    val url = buildCallEndPointUrl(view, filter)
+
+    val get: HttpGet = new HttpGet(url)
+    get.addHeader(X_CSOD_DATE, date)
+    get.addHeader(X_CSOD_SIGNATURE, signature)
+    get.addHeader(X_CSOD_SESSION_TOKEN, token)
+    get.addHeader(CONTENT_TYPE, TEXT_XML)
+    val httpClient = HttpClientBuilder.create().build()
+    val httpResponse = httpClient.execute(get)
+    httpResponse
+  }
+
   def callEndPoint(view: String, token: String, alias: String, secret: String): String = {
     val date = getDate
     val stringToSign = buildEndPointCallStringToSign(date = date, token = token, httpUrl = view)
     val signature = generateSignature(secret, stringToSign, date)
 
     //todo val filter = "?$filter=" + filterCondition // xxx_dt gt cast('2016-08-16', Edm.DateTimeOffset)
-    val url = "https://socgen-stg.csod.com" + view //+ "?$filter=lo_modified_dt=2013-4-3"
+    val url = buildCallEndPointUrl(view, "")
     val get: HttpGet = new HttpGet(url)
     get.addHeader(X_CSOD_DATE, date)
     get.addHeader(X_CSOD_SIGNATURE, signature)
     get.addHeader(X_CSOD_SESSION_TOKEN, token)
     get.addHeader(CONTENT_TYPE, TEXT_XML)
 
-    get.getAllHeaders.foreach(println)
+    //get.getAllHeaders.foreach(println)
 
     val httpClient = HttpClientBuilder.create().build()
     val httpResponse = httpClient.execute(get)
-    httpResponse.getAllHeaders.foreach(println)
+    //httpResponse.getAllHeaders.foreach(println)
     val entity = httpResponse.getEntity()
     var content = ""
     if (entity != null) {
@@ -108,11 +125,17 @@ object TrainingHttpClient {
     content
   }
   //filter condition better be a case class to ease manipulation
-  def buildCallEndPointUrl(url: String, view: String, filterCondition: String): String ={
-    ""
+  def buildCallEndPointUrl(view: String, filterCondition: String): String = {
+    apiConf.url + apiConf.endpointOdataDomain + view + buildCallEndPointFilterCondition(filterCondition)
+  }
+  def buildCallEndPointFilterCondition(filterCondition: String): String = {
+    filterCondition.isEmpty match {
+      case false => "?$filter=" + filterCondition
+      case true => ""
+    }
   }
 
-  def refreshToken(): Unit ={
-    
+  def refreshToken(): Unit = {
+
   }
 }
